@@ -1,0 +1,50 @@
+<f:layout name="Default" />
+
+<f:section name="FunctionsLeft">
+
+</f:section>
+
+<f:section name="ButtonsLeft">
+
+</f:section>
+
+<f:section name="Main">
+    <h2><f:translate key="connections" /></h2>
+    <f:flashMessages />
+    <f:if condition="{connections -> f:count()}">
+        <f:else>
+            <f:translate key="noconnections" />
+        </f:else>
+        <f:then>
+            <table class="table table-bordered">
+                <f:for each="{connections}" as="connectionRecord">
+                    <thead>
+                        <tr>
+                            <td class="col-xs-6"><f:translate key="connection.remote_hostname" /></td>
+                            <td class="col-xs-1"><f:translate key="connection.uses_https" /></td>
+                            <td class="col-xs-3"><f:translate key="connection.options" /></td>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td>{connectionRecord.remote_hostname}</td>
+                        <td><span class="fa fa-{f:if(condition: connectionRecord.uses_https, then: 'check', else: 'ban')}"/></td>
+                        <td class="col-xs-2">
+                            <div class="btn-group" role="group">
+                                <f:link.action action="call" arguments="{connection: connectionRecord.uid, task: 'list'}" class="btn btn-success">
+                                    <span class="fa fa-server"></span> connect
+                                </f:link.action>
+                                <f:link.action action="edit" arguments="{connection: connectionRecord.uid}" class="btn btn-warning">
+                                    <span class="fa fa-pencil"></span>
+                                </f:link.action>
+                                <f:link.action action="delete" arguments="{connection: connectionRecord.uid}" class="btn btn-danger">
+                                    <span class="fa fa-trash"></span>
+                                </f:link.action>
+                            </div>
+                        </td>
+                    </tr>
+                </f:for>
+            </table>
+        </f:then>
+    </f:if>
+    <f:render partial="ConnectionForm" arguments="{_all}" />
+</f:section>

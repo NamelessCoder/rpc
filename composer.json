@@ -1,0 +1,9 @@
+{
+    "name": "namelesscoder/rpc",
+    "type": "typo3-cms-extension",
+    "autoload": {
+        "psr-4": {
+            "NamelessCoder\\Rpc\\": "Classes/"
+        }
+    }
+}

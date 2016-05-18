@@ -1,0 +1,27 @@
+<f:form action="{formAction}" object="{connection}" objectName="connection" class="form-horizontal">
+    <f:if condition="{connection.uid} > 0">
+        <f:form.hidden name="connection[uid]" value="{connection.uid}" />
+    </f:if>
+    <div class="form-group">
+        <label class="col-xs-4 control-label" for="remote_hostname">
+            <f:translate key="connection.remote_hostname" />
+        </label>
+        <div class="col-xs-8">
+            <f:form.textfield property="remote_hostname" value="{connection.remote_hostname}" class="form-control" id="remote_hostname" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label" for="uses_https">
+            <f:translate key="connection.uses_https" />
+        </label>
+        <div class="col-xs-8">
+            <f:form.checkbox property="uses_https" value="1" checked="{connection.uses_https} == 1" class="form-control" id="uses_https" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label"></label>
+        <div class="col-xs-8">
+            <f:form.submit value="{f:translate(key: '{f:if(condition: connection.uid, then: \'saveconnection\', else: \'createconnection\')}')}" class="btn btn-primary" />
+        </div>
+    </div>
+</f:form>

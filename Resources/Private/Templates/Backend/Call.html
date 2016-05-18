@@ -1,0 +1,98 @@
+{namespace rpc=NamelessCoder\Rpc\ViewHelpers}
+<f:layout name="Default" />
+
+<f:section name="FunctionsLeft">
+
+</f:section>
+
+<f:section name="ButtonsLeft">
+
+</f:section>
+
+<f:section name="Main">
+    <h2><f:translate key="call" /></h2>
+    <f:flashMessages />
+    <f:if condition="{response.report.suppressed} == 0">
+        <div class="alert alert-{response.report.code}">
+            <h4>{response.report.title}</h4>
+            {response.report.content -> f:format.nl2br()}
+        </div>
+    </f:if>
+    <f:if condition="{response.task} == 'list'">
+        <f:then>
+            <div class="btn-group-vertical" role="group">
+                <f:for each="{response.payload}" key="taskName" as="taskDescription">
+                    <f:if condition="{taskName} != 'list'">
+                        <f:link.action action="call" arguments="{connection: connection.uid, task: taskName}" class="btn btn-default">
+                            {taskDescription}
+                        </f:link.action>
+                    </f:if>
+                </f:for>
+            </div>
+        </f:then>
+        <f:else>
+            <f:if condition="{response.completed} == 0">
+                <f:if condition="{response.report.steps} > 0">
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {response.report.percentComplete}%;">
+                            {response.report.step} / {response.report.steps}
+                        </div>
+                    </div>
+                </f:if>
+                <f:render section="Fields" arguments="{_all}" />
+            </f:if>
+            <f:if condition="{response.payload}">
+                <h3><f:translate key="response.payload" /></h3>
+                <rpc:payloadDisplay>{response.payload}</rpc:payloadDisplay>
+            </f:if>
+            <div class="pull-right">
+                <f:link.action action="call" arguments="{connection: connection.uid, task: 'list'}" class="btn btn-danger">
+                    <span class="fa fa-arrow-left"></span> <f:translate key="backtotasklist" />
+                </f:link.action>
+            </div>
+        </f:else>
+    </f:if>
+
+</f:section>
+
+
+<f:section name="Fields">
+    <h3><f:translate key="response.sheet" /></h3>
+    <f:if condition="{response.sheet.fields -> f:count()} > 0">
+        <f:else>
+            <div class="alert alert-warning">
+                <f:translate key="response.sheet.nofields" />
+            </div>
+        </f:else>
+        <f:then>
+            <f:form action="call" object="{arguments}" objectName="arguments" class="form-horizontal">
+                <f:form.hidden name="connection" value="{connection.uid}" />
+                <f:form.hidden name="task" value="{response.task}" />
+                <f:for each="{arguments}" key="argumentName" as="argumentValue">
+                    <f:form.hidden property="{argumentName}" value="{argumentValue}" />
+                </f:for>
+                <f:for each="{response.sheet.fields}" as="field">
+                    <div class="form-group{f:if(condition: field.error, then: ' has-error has-feedback')}">
+                        <label class="col-xs-4 control-label" for="field-{field.name}">
+                            <f:if condition="{field.rendersOwnLabel} == 0">
+                                {field.label}
+                            </f:if>
+                        </label>
+                        <div class="col-xs-8">
+                            <f:render partial="Fields" section="{field.type}" optional="1" arguments="{field: field, arguments: arguments}" />
+                        </div>
+                    </div>
+                </f:for>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label" for="field-{field.name}"></label>
+                    <div class="col-xs-8">
+                        <f:form.submit value="{response.sheet.submitButtonLabel}" class="btn btn-primary" />
+                        <f:link.action action="call" arguments="{connection: connection.uid, task: 'list'}" class="btn btn-default  ">
+                            <f:translate key="cancelbutton" />
+                        </f:link.action>
+                    </div>
+                </div>
+            </f:form>
+        </f:then>
+    </f:if>
+</f:section>

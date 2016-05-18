@@ -1,0 +1,42 @@
+
+<f:section name="TextLabel">
+    {field.label -> f:format.nl2br()}
+</f:section>
+
+<f:section name="PopupField">
+    <f:form.select property="{field.name}" options="{field.optionsForFluid}" id="field-{field.name}" class="form-control" />
+</f:section>
+
+<f:section name="TextField">
+    <f:form.textfield property="{field.name}" value="{field.value}" id="field-{field.name}" class="form-control" />
+</f:section>
+
+<f:section name="TextArea">
+    <f:form.textarea property="{field.name}" class="form-control">{field.value -> f:format.raw()}</f:form.textarea>
+</f:section>
+
+<f:section name="SelectField">
+    <div class="row">
+        <div class="col-xs-8">
+            <f:form.textfield property="{field.name}" value="{field.value}" id="field-{field.name}" class="form-control" />
+        </div>
+        <div class="col-xs-4">
+            <select id="field-{field.name}-valueselect" class="form-control"
+                    onchange="javascript:document.getElementById('field-{field.name}').value = document.getElementById('field-{field.name}-valueselect').value;">
+                <option value=""><f:translate key="selectvalue" /></option>
+                <f:for each="{field.options}" as="option">
+                    <option value="{option}">{option}</option>
+                </f:for>
+            </select>
+        </div>
+    </div>
+</f:section>
+
+<f:section name="ToggleField">
+    <div class="checkbox{f:if(condition: field.error, then: ' has-error has-feedback')}">
+        <label>
+            <f:form.checkbox property="{field.name}" value="{field.value}" id="field-{field.name}" checked="{field.on}" />
+            {field.label}
+        </label>
+    </div>
+</f:section>
