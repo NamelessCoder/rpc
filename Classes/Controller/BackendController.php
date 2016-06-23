@@ -100,8 +100,6 @@ class BackendController extends ActionController {
         $request->setToken(new Token($connection['token']));
         $this->view->assign('connection', $connection);
         $this->view->assign('arguments', $arguments);
-        #var_dump($arguments);
-        #exit();
         try {
             $response = $dispatcher->dispatchOutgoingRequest($connection['remote_hostname'], (boolean) $connection['uses_https'], $request);
             $connection['token'] = $response->getToken()->getTokenValue();
